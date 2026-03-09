@@ -9,15 +9,15 @@ const createUser = async (req,res) =>{
     const pwd = req.body.password
     const email = req.body.email
     const role = req.body.role
-    console.log("aqui")
+
 
     if (!username || !pwd || !email || !role) return res.sendStatus(400)
-    console.log("oi")
+
     try {
         const pwdHash = await bcrypt.hash(pwd,10)
-        console.log("i")
+
         const newUser = await User.create({"name":username,"password":pwdHash,"email":email,"role":role})
-        console.log("u")
+
         return res.status(200).json({"message":newUser})
 
     } catch (err){
