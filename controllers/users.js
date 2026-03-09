@@ -66,8 +66,8 @@ const deleteUser = async (req,res)=>{
     if (!email) return res.status(402)
     
     try{
-        await User.findAndDelete({"email":email})
-        return res.statsu(203).json({"message":"user deleted"})
+        await User.findOneAndDelete({"email":email})
+        return res.status(203).json({"message":"user deleted"})
     } catch(err){
         return res.status(500).json({"message":err.message})
     }
@@ -82,13 +82,13 @@ const updateUser = async (req,res)=>{
 
     try{
         if (changeName){
-            await User.findAndUpdate({"email":email},{"name":changeName})
+            await User.findOneAndUpdate({"email":email},{"name":changeName})
             return res.status(200).json({"message":"usuario atualizado"})
         }
         if (changePwd){
             const pwdHash = await bcrypt.hash(changePwd , 10)
 
-            await User.findAndUpdate({"email":email},{"password":pwdHash})
+            await User.findOneAndUpdate({"email":email},{"password":pwdHash})
             return res.status(200).json({"message":"usuario atualizado"})
 
         }
