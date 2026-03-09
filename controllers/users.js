@@ -69,3 +69,29 @@ const deleteUser = async (req,res)=>{
     }
 }
 
+const updateUser = async (req,res)=>{
+    const email = req.body.email
+    const changeName = req.body.changeName
+    const changePwd = req.body.changePwd
+
+    if (!email) return res.status(402)
+
+    try{
+        if (changeName){
+            await User.findAndUpdate({"email":email},{"name":changeName})
+            return res.status(200).json({"message":"usuario atualizado"})
+        }
+        if (changePwd){
+            const pwdHash = await bcrypt.hash(changePwd , 10)
+
+            await User.findAndUpdate({"email":email},{"password":pwdHash})
+            return res.status(200).json({"message":"usuario atualizado"})
+
+        }
+
+        return res.status(402).json({"message":"sem argumentos"})
+
+    } catch (err){
+        return res.status(500).json({"message":err.message})
+    }
+}
