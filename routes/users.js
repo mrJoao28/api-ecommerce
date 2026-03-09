@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const {updateUser , deleteUser , acessUser , createUser  } = require("../controllersqusers")
+const {updateUser , deleteUser , acessUser , createUser  } = require("../controllers/users")
 const verify = require("../middlewares/users")
 
 /*
