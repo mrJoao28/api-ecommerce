@@ -95,3 +95,5 @@ const updateUser = async (req,res)=>{
         return res.status(500).json({"message":err.message})
     }
 }
+
+module.exports = {updateUser , deleteUser , acessUser , createUser  }
