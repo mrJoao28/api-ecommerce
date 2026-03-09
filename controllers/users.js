@@ -54,3 +54,18 @@ const acessUser = async (req,res)=>{
 
     }
 }
+
+
+const deleteUser = async (req,res)=>{
+    const email = req.body.email
+
+    if (!email) return res.status(402)
+    
+    try{
+        await User.findAndDelete({"email":email})
+        return res.statsu(203).json({"message":"user deleted"})
+    } catch(err){
+        return res.status(500).json({"message":err.message})
+    }
+}
+
