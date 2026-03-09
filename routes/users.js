@@ -12,7 +12,7 @@ patch user
 
 router.post("/new-user",createUser)
 router.get("/user",acessUser)
-router.delete("/user/:id",verify,deleteUser)
-router.patch("/user/:id",verify,updateUser)
+router.delete("/user/",verify,deleteUser)
+router.patch("/user/",verify,updateUser)
 
 module.exports = router
