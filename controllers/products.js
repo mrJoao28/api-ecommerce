@@ -27,14 +27,14 @@ const creatProduct = async (req,res)=>{
 
 const showProduct = async (req,res)=>{
     const productId = req.params.id
-    if (!productsId) return res.sendStatus(402)
+    if (!productId) return res.sendStatus(402)
 
     try {
         const foundProduct = await Products.findOne({"_id":productId})
         if (!foundProduct) return res.sendStatus(404)
         return res.sendStatus(200).json({"product":foundProduct})
     }catch(err){
-        return res.sendStatus(500).json({"message":err.message})
+        return res.sendStatus(500).json({"message":err})
     }
 }
 
