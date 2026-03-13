@@ -12,7 +12,7 @@ const creatProduct = async (req,res)=>{
     
     try {
         
-        const newProduct = await new Products({"product-name":nameProduct,"description":descriptionProduct,"price":priceProduct,"category":category})
+        const newProduct = await  Products.create({"product-name":nameProduct,"description":descriptionProduct,"price":priceProduct,"category":category})
     
         return res.sendStatus(200).json({"product":newProduct})
 
