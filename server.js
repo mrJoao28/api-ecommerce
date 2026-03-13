@@ -7,6 +7,7 @@ const app = express()
 
 app.use(express.json())
 app.use("/ecommerce", require("./routes/users"))
+app.use("/ecommerce",require("./routes/products"))
 
 
 
