@@ -7,15 +7,13 @@ const creatProduct = async (req,res)=>{
     const descriptionProduct = req.body.description
     const priceProduct = req.body.price
     const category = req.body.category
+    
     if (!nameProduct || !descriptionProduct || !priceProduct || !category) return res.sendStatus(402)
     
     try {
-
-        const newProduct = await Products.create({"product-name":nameProduct,
-                                            "description":descriptionProduct,
-                                            "price":priceProduct,
-                                            "category":category})
-
+        
+        const newProduct = await new Products({"product-name":nameProduct,"description":descriptionProduct,"price":priceProduct,"category":category})
+    
         return res.sendStatus(200).json({"product":newProduct})
 
     } catch(err){
@@ -52,7 +50,7 @@ const showAllProducts = async (req,res)=>{
 
 const deleteProduct = async (req,res)=>{
     const productId = req.params.id
-    if (!productsId) return res.sendStatus(402)
+    if (!productId) return res.sendStatus(402)
 
     try {
         const foundProduct = await Products.findOneAndDelete({"_id":productId})
