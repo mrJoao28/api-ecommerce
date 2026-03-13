@@ -84,7 +84,7 @@ const updateProduct = async (req,res)=>{
         changes["description"] = descriptionChange
     }
     if (categoryChange){
-        changes["category"] = categoryChangeChange
+        changes["category"] = categoryChange
     }
 
     if (changes.length === 0){
