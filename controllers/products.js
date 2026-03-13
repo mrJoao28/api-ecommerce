@@ -83,3 +83,5 @@ const updateProduct = async (req,res)=>{
     }
 }
 
+
+module.exports = {updateProduct,deleteProduct,showAllProducts,showProduct,creatProduct}
