@@ -3,12 +3,7 @@ const router = express.Router()
 const {updateUser , deleteUser , acessUser , createUser  } = require("../controllers/users")
 const verify = require("../middlewares/users")
 
-/*
-post new_user
-get user
-delete user
-patch user 
-*/
+
 
 router.post("/new-user",createUser)
 router.get("/user",acessUser)
