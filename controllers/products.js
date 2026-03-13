@@ -70,12 +70,26 @@ const updateProduct = async (req,res)=>{
     const priceChange = req.body.price
     const descriptionChange = req.body.description
     const categoryChange = req.body.category
+    let changes = {}
+    if (nameChange){
+        changes["product-name"] = nameChange
+    }
+    if (priceChange){
+        changes["price"] = priceChange
+    }
+    if (descriptionChange){
+        changes["description"] = descriptionChange
+    }
+    if (categoryChange){
+        changes["category"] = categoryChangeChange
+    }
+
 
     if (!productId) return res.sendStatus(402)
 
 
     try {
-        const foundProduct = await Products.findOneAndUpdate({"_id":productId})
+        const foundProduct = await Products.findOneAndUpdate({"_id":productId},{$set:changes})
         if (!foundProduct) return res.sendStatus(404)
         return res.sendStatus(200).json({"message":"product deleted"})
     }catch(err){
