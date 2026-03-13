@@ -5,7 +5,7 @@ const verify = require("../middlewares/users")
 
 
 router.get("/products",verify,showAllProducts)
-router.get("/products",verify,showProduct)
+router.get("/products/:id",verify,showProduct)
 router.post("/create-product",verify,creatProduct)
 router.patch("/update-product",verify,updateProduct)
 router.delete("/delete-product",verify,deleteProduct)

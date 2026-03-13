@@ -38,11 +38,12 @@ const showProduct = async (req,res)=>{
 
 const showAllProducts = async (req,res)=>{
     try {
+        
         const allProducts = await Products.find({})
-
+    console.log(allProducts)
         if (!allProducts) return res.sendStatus(404).json({"message":"no products"})
 
-        return res.sendStatus(200).json({"products":allProducts})
+        return res.sendStatus(200).json({"products":allProducts,"message":"Oi"})
     } catch(err){
         return res.sendStatus(500).json({"message":err.message})
     }
