@@ -70,6 +70,9 @@ const updateProduct = async (req,res)=>{
     const priceChange = req.body.price
     const descriptionChange = req.body.description
     const categoryChange = req.body.category
+
+    if (!productId) return res.sendStatus(402)
+
     let changes = {}
     if (nameChange){
         changes["product-name"] = nameChange
@@ -84,8 +87,11 @@ const updateProduct = async (req,res)=>{
         changes["category"] = categoryChangeChange
     }
 
+    if (changes.length === 0){
+        return res.sendStatus(200).json({"message":"nenhum dado para atualizar"})
+    }
 
-    if (!productId) return res.sendStatus(402)
+    
 
 
     try {
