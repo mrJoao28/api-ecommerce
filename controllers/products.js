@@ -11,7 +11,6 @@ const creatProduct = async (req,res)=>{
     if (!nameProduct || !descriptionProduct || !priceProduct || !category) return res.sendStatus(402)
     
     try {
-        
         const newProduct = await  Products.create({"product-name":nameProduct,"description":descriptionProduct,"price":priceProduct,"category":category})
     
         return res.sendStatus(200).json({"product":newProduct})
