@@ -21,4 +21,12 @@ const verify = async (req,res,next)=>{
     
 }
 
-module.exports = verify
+
+const verify_adm = (req,res,next)=>{
+    const role = req.user.role 
+    if (!role) return res.sendStatus(401)
+    if (role !== "adm") return res.sendStatus(402)
+    else next()
+}
+
+module.exports = {verify , verify_adm}
