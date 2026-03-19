@@ -11,4 +11,6 @@ router.post("/create-product",checkUser,verify,creatProduct)
 router.patch("/update-product",checkUser,verify,updateProduct)
 router.delete("/delete-product",checkUser,verify,deleteProduct)
 
+
+
 module.exports = router 
