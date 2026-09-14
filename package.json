@@ -1,14 +1,14 @@
 {
   "name": "api-ecommerce",
   "version": "1.0.0",
-  "description": "",
+  "description": "REST API for an e-commerce application with authentication and product management",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev":"nodemon server"
+    "dev": "nodemon server.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["node", "express", "mongodb", "mongoose", "rest-api", "ecommerce"],
+  "author": "João",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -16,7 +16,9 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.2.4",
+    "mongoose": "^9.2.4"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.14"
   }
 }
