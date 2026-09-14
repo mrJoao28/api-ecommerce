@@ -1,103 +1,100 @@
-const express = require("express")
 const User = require("../models/users")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 require("dotenv").config()
 
-const createUser = async (req,res) =>{
-    const username = req.body.username
-    const pwd = req.body.password
-    const email = req.body.email
-    const role = req.body.role
+const createUser = async (req, res) => {
+    const { username, password, email, role } = req.body
 
-
-    if (!username || !pwd || !email || !role) return res.sendStatus(400)
+    if (!username || !password || !email || !role) {
+        return res.status(400).json({ message: "username, password, email and role are required" })
+    }
 
     try {
-        const pwdHash = await bcrypt.hash(pwd,10)
+        const passwordHash = await bcrypt.hash(password, 10)
+        const newUser = await User.create({ name: username, password: passwordHash, email, role })
 
-        const newUser = await User.create({"name":username,"password":pwdHash,"email":email,"role":role})
-
-        return res.status(200).json({"message":newUser})
-
-    } catch (err){
-
-        return res.status(500).json({"message":err.message})
-
+        return res.status(201).json({ user: newUser })
+    } catch (err) {
+        if (err.code === 11000) return res.status(409).json({ message: "email already registered" })
+        return res.status(500).json({ message: err.message })
     }
-
 }
 
-const acessUser = async (req,res)=>{
-    const email = req.body.email
-    const pwd = req.body.password
+const acessUser = async (req, res) => {
+    const { email, password } = req.body
 
-    if (!email || !pwd) return res.status(401)
+    if (!email || !password) {
+        return res.status(400).json({ message: "email and password are required" })
+    }
 
-    try{
-        foundUser = await User.findOne({"email":email})
+    if (!process.env.AcessToken) {
+        return res.status(500).json({ message: "JWT secret is not configured" })
+    }
 
-        if (!foundUser) return res.sendStatus(404)
+    try {
+        const foundUser = await User.findOne({ email })
 
-        if (!(await bcrypt.compare(pwd,foundUser.password))) return res.sendStatus(402)
+        if (!foundUser || !(await bcrypt.compare(password, foundUser.password))) {
+            return res.status(401).json({ message: "invalid credentials" })
+        }
 
-        const acessToken = jwt.sign(
-            {
-                "name":foundUser.name,
-                "role":foundUser.role
-            },
+        const accessToken = jwt.sign(
+            { name: foundUser.name, role: foundUser.role },
             process.env.AcessToken,
-            {"expiresIn":"20m"}
+            { expiresIn: "20m" }
         )
 
-       return res.status(200).json({"token":acessToken})
-
-    } catch(err){
-
-        return res.status(500).json({"message":err.message})
-
+        return res.status(200).json({ token: accessToken })
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
     }
 }
 
+const deleteUser = async (req, res) => {
+    const { email } = req.body
 
-const deleteUser = async (req,res)=>{
-    const email = req.body.email
+    if (!email) return res.status(400).json({ message: "email is required" })
 
-    if (!email) return res.status(402)
-    
-    try{
-        await User.findOneAndDelete({"email":email})
-        return res.status(203).json({"message":"user deleted"})
-    } catch(err){
-        return res.status(500).json({"message":err.message})
+    try {
+        const deletedUser = await User.findOneAndDelete({ email })
+
+        if (!deletedUser) return res.status(404).json({ message: "user not found" })
+
+        return res.status(200).json({ message: "user deleted" })
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
     }
 }
 
-const updateUser = async (req,res)=>{
-    const email = req.body.email
-    const changeName = req.body.changeName
-    const changePwd = req.body.changePwd
+const updateUser = async (req, res) => {
+    const { email, changeName, changePwd } = req.body
 
-    if (!email) return res.status(402)
+    if (!email) return res.status(400).json({ message: "email is required" })
+    if (changeName === undefined && changePwd === undefined) {
+        return res.status(400).json({ message: "no data to update" })
+    }
 
-    try{
-        if (changeName){
-            await User.findOneAndUpdate({"email":email},{"name":changeName})
-            return res.status(200).json({"message":"usuario atualizado"})
-        }
-        if (changePwd){
-            const pwdHash = await bcrypt.hash(changePwd , 10)
+    const changes = {}
+    if (changeName !== undefined) changes.name = changeName
 
-            await User.findOneAndUpdate({"email":email},{"password":pwdHash})
-            return res.status(200).json({"message":"usuario atualizado"})
-
+    try {
+        if (changePwd !== undefined) {
+            changes.password = await bcrypt.hash(changePwd, 10)
         }
 
-        return res.status(402).json({"message":"sem argumentos"})
+        const updatedUser = await User.findOneAndUpdate(
+            { email },
+            { $set: changes },
+            { new: true, runValidators: true }
+        )
 
-    } catch (err){
-        return res.status(500).json({"message":err.message})
+        if (!updatedUser) return res.status(404).json({ message: "user not found" })
+
+        return res.status(200).json({ user: updatedUser })
+    } catch (err) {
+        return res.status(500).json({ message: err.message })
     }
 }
 
-module.exports = {updateUser , deleteUser , acessUser , createUser  }
+module.exports = { updateUser, deleteUser, acessUser, createUser }
